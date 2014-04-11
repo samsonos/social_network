@@ -7,30 +7,44 @@
 namespace samson\social;
 
 /**
- *
+ * Generic class for storing user data in local format
  * @author Vitaly Egorov <egorov@samsonos.com>
  * @copyright 2013 SamsonOS
  * @version 
  */
 class User 
 {
+    /** User given name */
     public $name = '';
-// as a result we don't have unified method authentication()
+
+    /** User second name */
     public $surname = '';
 
+    /** User social system identifier */
     public $socialID = '';
 
+    /** User email address */
     public $email = '';
 
+    /** User date of birth */
     public $birthday = '';
 
+    /** User gender */
     public $gender = '';
 
+    /** User native language/locale */
     public $locale = '';
 
-    /** all other rubbish */
+    /** User additional data */
     public $other;
 
-    // P.S. nothing to comment
+    /**
+     * Generic user constructor
+     * @param object|array $userData Entity recieved from social system
+     */
+    public function __construct($userData = null)
+    {
+
+    }
 }
  

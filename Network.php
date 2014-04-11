@@ -5,13 +5,11 @@
  */
 namespace samson\social;
 
-use samson\core\CompressableService;
-
 /**
  * Class abstractSocial
  * @package samson\social
  */
-class Core extends CompressableService implements iSocial
+class Network extends \samson\social\Core
 {
     /** Prefix for storing social objects in session */
     const SESSION_PREFIX = '__social';
@@ -24,10 +22,7 @@ class Core extends CompressableService implements iSocial
     const STATUS_FAIL = 114;
 
     /** module name */
-    public $id = 'social';
-
-    /** Database table name for interaction */
-    public $dbTable;
+    public $id = 'socialnetwork';
 
     /* Database user name field */
     public $dbNameField = 'name';
@@ -40,9 +35,6 @@ class Core extends CompressableService implements iSocial
 
     /* Database user gender field */
     public $dbGenderField = 'gender';
-
-    /* Database user email field */
-    public $dbEmailField = 'email';
 
     /* Database identifier field */
     public $dbIdField;
@@ -66,7 +58,7 @@ class Core extends CompressableService implements iSocial
     public $handler;
 
     /** Module dependencies */
-    public $requirements = array('activerecord');
+    public $requirements = array('social');
 
     /**
      * Object with new user's data
@@ -74,47 +66,10 @@ class Core extends CompressableService implements iSocial
      */
     public $user;
 
-    /**
-     * Get current soical user database record object
-     * @param $user Variable to return user object
-     *
-     * @return bool True if social user exists
-     */
-    public static function user(&$user)
-    {
-        if(isset($_SESSION[self::SESSION_PREFIX])) {
-
-            // Load user object from session
-            $user = unserialize($_SESSION[self::SESSION_PREFIX]);
-
-            return true;
-
-        } else {
-            return false;
-        }
-    }
-
     /** Prepare module data  */
     public function prepare()
     {
         $class = get_class($this);
-
-        // Try to find parent social class for loading base configuration
-        if ($class != 'samson\social\Core') {
-            /**@var Core $parent */
-            $parent = & m('social');
-            // If we have found parent class
-            if(isset($parent)) {
-                // Load parent configuration data
-                $this->dbTable          = $parent->dbTable;
-                $this->dbNameField      = $parent->dbNameField;
-                $this->dbBirthdayField  = $parent->dbBirthdayField;
-                $this->dbGenderField    = $parent->dbGenderField;
-                $this->dbSurnameField   = $parent->dbSurnameField;
-                $this->dbEmailField     = $parent->dbEmailField;
-                $this->handler          = $parent->handler;
-            }
-        }
 
         // Check table
         if (!isset($this->dbTable)) {
@@ -122,7 +77,7 @@ class Core extends CompressableService implements iSocial
         }
 
         // Social system specific configuration check
-        if ($class != 'samson\social\Core') {
+        if ($class != __CLASS__) {
             db()->createField($this, $this->dbTable, 'dbIdField', 'VARCHAR(50)');
         }
 
@@ -202,30 +157,23 @@ class Core extends CompressableService implements iSocial
      */
     protected function & storeUserData(&$user = null)
     {
-        // Get database field names
-        $fid = $this->dbIdField;
-        $fname = $this->dbNameField;
-        $fsurname = $this->dbSurnameField;
-        $fgender = $this->dbGenderField;
-        $fbirthday = $this->dbBirthdayField;
-        $femail = $this->dbEmailField;
-
         // If no user is passed - create it
         if (!isset($user)) {
             $user = new $this->dbTable(false);
         }
 
         // Store social data for user
-        $user->$fid = $this->user->socialID;
-        $user->$femail = $this->user->email;
-        $user->$fname = $this->user->name;
-        $user->$fsurname = $this->user->surname;
-        $user->$fgender = $this->user->gender;
-        $user->$fbirthday = $this->user->birthday;
+        $user[$this->dbIdField]         = $this->user->socialID;
+        $user[$this->dbNameField]       = strlen($this->user->name) ? $this->user->name : $user[$this->dbNameField];
+        $user[$this->dbSurnameField]    = strlen($this->user->surname) ? $this->user->surname : $user[$this->dbSurnameField] ;
+        $user[$this->dbGenderField]     = strlen($this->user->gender) ? $this->user->gender : $user[$this->dbGenderField] ;
+        $user[$this->dbBirthdayField]   = max($user[$this->dbBirthdayField],$this->user->birthday);
 
         // If no email is passed - set hashed socialID as email
-        if (!isset($user->$femail{0})) {
-            $user->$femail = md5($this->user->socialID);
+        if (!strlen($this->user->email)) {
+            $user[$this->dbEmailField] = md5($this->user->socialID);
+        } else {
+            $user[$this->dbEmailField] = $this->user->email;
         }
 
         $user->save();
@@ -306,7 +254,7 @@ class Core extends CompressableService implements iSocial
         return json_decode($result, true);
     }
 
-    public function post($url, $params)
+    public function post($url, $params, $headers = array())
     {
         try {
             $curl = curl_init();
@@ -315,6 +263,7 @@ class Core extends CompressableService implements iSocial
             curl_setopt($curl, CURLOPT_POSTFIELDS, urldecode(http_build_query($params)));
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
             $result = curl_exec($curl);
         } catch (Exeption $e) {
             throw new Exeption($e);
