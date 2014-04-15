@@ -4,7 +4,7 @@
 	"version":"0.0.1",
 	"require":{
 		"samsonos/social_core":"*",
-		"samsonos/activerecord":"*"
+		"samsonos/php_activerecord":"*"
 	},
 	"license":"Open Software License (OSL) v 3.0",
 	"homepage":"http://samsonos.com/"
