@@ -3,7 +3,7 @@
  * Created by Vitaly Iegorov <egorov@samsonos.com>
  * on 03.03.14 at 11:25
  */
-namespace samson\social\network;
+namespace samson\social;
 
 /**
  * Class abstractSocial
