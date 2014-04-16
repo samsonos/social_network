@@ -54,9 +54,6 @@ class Network extends \samson\social\core\Core
     /** Url in social network where you gonna take user's data */
     public $userURL;
 
-    /** External callable for handling social authorization */
-    public $handler;
-
     /** Module dependencies */
     public $requirements = array('social');
 
@@ -191,7 +188,6 @@ class Network extends \samson\social\core\Core
 
         // If we successfully get social user profile data
         if (isset($this->user)) {
-
             // Try to find user by socialID
             if ($this->findBySocialID($user)) {
                 $status = self::STATUS_SUCCESS_FOUND;
