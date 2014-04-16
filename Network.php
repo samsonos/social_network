@@ -36,6 +36,9 @@ class Network extends \samson\social\core\Core
     /* Database user gender field */
     public $dbGenderField = 'gender';
 
+    /* Database user photo field */
+    public $dbPhotoField = 'photo';
+
     /* Database identifier field */
     public $dbIdField;
 
@@ -84,6 +87,7 @@ class Network extends \samson\social\core\Core
         db()->createField($this, $this->dbTable, 'dbEmailField', 'VARCHAR(50)');
         db()->createField($this, $this->dbTable, 'dbGenderField', 'VARCHAR(10)');
         db()->createField($this, $this->dbTable, 'dbBirthdayField', 'DATE');
+        db()->createField($this, $this->dbTable, 'dbPhotoField', 'VARCHAR(125)');
 
         return parent::prepare();
     }
@@ -165,6 +169,7 @@ class Network extends \samson\social\core\Core
         $user[$this->dbSurnameField]    = strlen($this->user->surname) ? $this->user->surname : $user[$this->dbSurnameField] ;
         $user[$this->dbGenderField]     = strlen($this->user->gender) ? $this->user->gender : $user[$this->dbGenderField] ;
         $user[$this->dbBirthdayField]   = max($user[$this->dbBirthdayField],$this->user->birthday);
+        $user[$this->dbPhotoField]      = strlen($this->user->photo) ? $this->user->photo : $user[$this->dbPhotoField];
 
         // If no email is passed - set hashed socialID as email
         if (!strlen($this->user->email)) {

@@ -35,6 +35,9 @@ class User
     /** User native language/locale */
     public $locale = '';
 
+    /** User small photo */
+    public $photo;
+
     /** User additional data */
     public $other;
 
