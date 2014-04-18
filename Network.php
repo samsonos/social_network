@@ -9,7 +9,7 @@ namespace samson\social;
  * Class abstractSocial
  * @package samson\social
  */
-class Network extends \samson\social\core\Core
+class Network extends Core
 {
     /** Prefix for storing social objects in session */
     const SESSION_PREFIX = '__social';
