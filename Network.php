@@ -218,11 +218,13 @@ class Network extends Core
 
             // Create or update user database record
             $user = $this->storeUserData($user);
+
+            // Perform generic authorization
+            $this->authorize($user);
         }
 
         // Call external social authorization handler
         if (is_callable($this->handler)) {
-
             call_user_func_array($this->handler, array(&$user, $status));
         }
     }
