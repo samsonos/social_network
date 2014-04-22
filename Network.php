@@ -57,8 +57,11 @@ class Network extends Core
     /** Url in social network where you gonna take user's data */
     public $userURL;
 
-    /** Module dependencies */
-    public $requirements = array('social');
+    /**
+     * External callable for handling social authorization
+     * @var callback
+     */
+    public $handler;
 
     /**
      * Object with new user's data
