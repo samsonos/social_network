@@ -220,7 +220,7 @@ class Network extends Core
             $user = $this->storeUserData($user);
         }
 
-        // Call external social autorization handler
+        // Call external social authorization handler
         if (is_callable($this->handler)) {
 
             call_user_func_array($this->handler, array(&$user, $status));
