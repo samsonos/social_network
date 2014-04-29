@@ -111,11 +111,19 @@ class Network extends Core
 
     /**
      * Fill object User
-     * @param array $user Answer of social network
+     *
+     * @param array $userData Answer of social network
+     * @param mixed $user Pointer to user object for filling
      */
-    protected function setUser(array $user)
+    protected function setUser(array $userData, & $user = null)
     {
-        $this->user->birthday = date('Y-m-d H:i:s', strtotime($this->user->birthday));
+        // Generic birthdate parsing
+        $user->birthday = date('Y-m-d H:i:s', strtotime($user->birthday));
+
+        // If no external user is passed set as current user
+        if (!isset($user)) {
+            $this->user = $user;
+        }
     }
 
     /**
