@@ -57,6 +57,9 @@ class Network extends Core
     /** Url in social network where you gonna take user's data */
     public $userURL;
 
+    /** Session token for API interaction */
+    public $token;
+
     /**
      * External callable for handling social authorization
      * @var callback
@@ -93,6 +96,17 @@ class Network extends Core
         db()->createField($this, $this->dbTable, 'dbPhotoField', 'VARCHAR(125)');
 
         return parent::prepare();
+    }
+
+    /** Social network initialization */
+    public function init(array $params = array())
+    {
+        // Try to load token from session
+        if (isset($_SESSION[self::SESSION_PREFIX.'_'.$this->id])) {
+            $this->token = $_SESSION[self::SESSION_PREFIX.'_'.$this->id];
+        }
+
+        parent::init($params);
     }
 
     /**
@@ -229,12 +243,25 @@ class Network extends Core
         }
     }
 
+    /**
+     * Get all user fiends list
+     * @return User[] Collection of user friends objects
+     */
+    public function friends()
+    {
+        return array();
+    }
+
+    /**
+     * Get generic success return url from social network
+     * @return string
+     */
     public function returnURL()
     {
         return  'http://'.$_SERVER['HTTP_HOST'].'/'.$this->id.'/token';
     }
 
-    public function getProfile()
+    public function profile()
     {
         return $this->user;
     }
