@@ -122,7 +122,7 @@ class Network extends Core
 
         // If no external user is passed set as current user
         if (!isset($user)) {
-            $this->user = $user;
+            $this->user = & $user;
         }
     }
 
@@ -255,7 +255,7 @@ class Network extends Core
      * Get all user fiends list
      * @return User[] Collection of user friends objects
      */
-    public function friends()
+    public function & friends($count = null, $offset = null)
     {
         return array();
     }
