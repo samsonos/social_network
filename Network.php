@@ -121,7 +121,7 @@ class Network extends Core
         $user->birthday = date('Y-m-d H:i:s', strtotime($user->birthday));
 
         // If no external user is passed set as current user
-        if (!isset($user)) {
+        if (isset($user)) {
             $this->user = & $user;
         }
     }
@@ -212,6 +212,7 @@ class Network extends Core
     {
         /**@var \samson\activerecord\dbRecord $user */
         $user = null;
+
 
         // Return status
         $status = self::STATUS_FAIL;
