@@ -253,11 +253,21 @@ class Network extends Core
     }
 
     /**
-     * Get all user fiends list
+     * Get user fiends list
+     *
+     * @param integer $count    Friends count
+     * @param integer $offset   Friends offset
+     *
      * @return User[] Collection of user friends objects
      */
     public function & friends($count = null, $offset = null)
     {
+        // If we have authorized via one of social modules
+        if (isset($this->active)) {
+            // Call friends method on active social module
+            return $this->active->friends($count, $offset);
+        }
+
         return array();
     }
 
@@ -288,8 +298,8 @@ class Network extends Core
             curl_setopt($curl, CURLOPT_URL, $url . '?' . urldecode(http_build_query($params)));
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             $result = curl_exec($curl);
-        } catch (Exeption $e) {
-            throw new Exeption($e);
+        } catch (\Exception $e) {
+            throw new \Exception($e);
         }
         curl_close($curl);
 
@@ -307,8 +317,8 @@ class Network extends Core
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
             $result = curl_exec($curl);
-        } catch (Exeption $e) {
-            throw new Exeption($e);
+        } catch (\Exception $e) {
+            throw new \Exception($e);
         }
         curl_close($curl);
 
