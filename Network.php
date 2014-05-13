@@ -262,13 +262,15 @@ class Network extends Core
      */
     public function & friends($count = null, $offset = null)
     {
+        $result = array();
+
         // If we have authorized via one of social modules
         if (isset($this->active)) {
             // Call friends method on active social module
-            return $this->active->friends($count, $offset);
+            $result = & $this->active->friends($count, $offset);
         }
 
-        return array();
+        return $result;
     }
 
     /**
