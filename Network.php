@@ -274,6 +274,20 @@ class Network extends Core
     }
 
     /**
+     * Send message via social network
+     *
+     * @param string $userID Social network user identifier
+     * @param $text Message text
+     *
+     * @return bool True if message has been successfully sent
+     */
+    public function message($userID, $text)
+    {
+        return false;
+    }
+
+
+    /**
      * Get generic success return url from social network
      * @return string
      */
