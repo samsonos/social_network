@@ -3,13 +3,13 @@
  * Created by Vitaly Iegorov <egorov@samsonos.com>
  * on 03.03.14 at 11:25
  */
-namespace samson\social;
+namespace samson\social\network;
 
 /**
  * Class abstractSocial
  * @package samson\social
  */
-class Network extends Core
+class Network extends \samson\social\Core
 {
     /** Prefix for storing social objects in session */
     const SESSION_PREFIX = '__social';
