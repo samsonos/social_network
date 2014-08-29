@@ -198,7 +198,9 @@ class Network extends \samson\social\Core
 
         // If no email is passed - set hashed socialID as email
         if (!strlen($this->user->email)) {
-            $user[$this->dbEmailField] = md5($this->user->socialID);
+            if (!strlen($user->email)) {
+                $user[$this->dbEmailField] = md5($this->user->socialID);
+            }
         } else {
             $user[$this->dbEmailField] = $this->user->email;
         }
@@ -304,6 +306,7 @@ class Network extends \samson\social\Core
     public function redirect($url, array $params)
     {
         $request = $url . '?' . urldecode(http_build_query($params));
+
         header('Location: '.$request);
     }
 
